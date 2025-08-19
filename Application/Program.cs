@@ -17,9 +17,11 @@ builder
 
 var app = builder.Build();
 
-
+app.UseStaticFiles();
+app.UseRouting();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.MapControllers();
 
+app.MapGet("/", () => Results.Redirect("/swagger"));
 app.Run();

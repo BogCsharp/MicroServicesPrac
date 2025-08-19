@@ -52,7 +52,10 @@ namespace Web.Extensions
         public static WebApplicationBuilder AddData(this WebApplicationBuilder builder) 
         {
             builder.Services.AddDbContext<OrdersDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+                new MySqlServerVersion(new Version(8, 0, 34))));
+          
+
             return builder;
 
         }

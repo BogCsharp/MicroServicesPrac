@@ -1,0 +1,1 @@
+C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Domain\obj\Release\net8.0\staticwebassets.build.json
