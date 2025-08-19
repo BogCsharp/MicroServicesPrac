@@ -1,4 +1,5 @@
 ﻿using App.Abstrations;
+using App.Mappers;
 using App.Models.Carts;
 using Domain.Context;
 using Domain.Entities;
@@ -27,17 +28,7 @@ namespace App.Services
             
             var result= await context.Carts.Include(x => x.CartItems).FirstAsync(x => x.Id == cartSaveResult.Entity.Id);
 
-            return new CartDTO
-            {
-                Id = result.Id,
-                CartItems = result.CartItems!.Select(item => new CartItemDTO
-                {
-                    Id = item.Id,
-                    Price = item.Price,
-                    Name = item.Name,
-                    Quantity = item.Quantity
-                }).ToList()
-            };
+            return result.ToDto();
 
            
             

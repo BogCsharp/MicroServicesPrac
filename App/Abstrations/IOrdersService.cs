@@ -5,10 +5,10 @@ namespace App.Abstrations
     public interface IOrdersService
     {
         Task<OrderDTO> Create(CreateOrderDTO order);
-        Task<OrderDTO> GetById(Guid orderId);
-        Task<List<OrderDTO>> GetByUser(Guid customerId);
+        Task<OrderDTO> GetById(long orderId);
+        Task<List<OrderDTO>> GetByUser(long customerId);
         Task<List<OrderDTO>> GetAll();
-        Task Reject(Guid orderId);
+        Task Reject(long orderId);
 
     }
 }

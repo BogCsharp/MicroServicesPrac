@@ -1,7 +1,10 @@
 ﻿using App.Abstrations;
+using App.Mappers;
 using App.Models.Orders;
 using Domain.Context;
 using Domain.Entities;
+using Domain.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.Services
 {
@@ -9,6 +12,10 @@ namespace App.Services
     {
         public async Task<OrderDTO> Create(CreateOrderDTO order)
         {
+            if (order.Cart == null)
+            {
+                throw new ArgumentNullException();
+            }
             var cart = await cartsService.Create(order.Cart);
             var entity = new OrderEntity
             {
@@ -23,32 +30,35 @@ namespace App.Services
             var orderEntityResult = ordersSaveResult.Entity;
 
 
-            return new OrderDTO
+            return orderEntityResult.ToDto();
+        }
+
+        public async Task<List<OrderDTO>> GetAll()
+        {
+            var entity = await context.Orders.Include(o => o.Cart).ThenInclude(c => c.CartItems).ToListAsync();
+
+            return entity.Select(x => x.ToDto()).ToList();
+        }
+
+        public async Task<OrderDTO> GetById(long orderId)
+        {
+            var entity =await context.Orders.Include(x => x.Cart).ThenInclude(c => c.CartItems).FirstOrDefaultAsync(x=>x.Id==orderId);
+
+            if(entity == null)
             {
-                Id = orderEntityResult.Id,
-                CustomerId = orderEntityResult.CustomerId!.Value,
-                Cart = cart,
-                Name = orderEntityResult.Name,
-                OrderNumber = orderEntityResult.OrderNumber
-            };
+                throw new EntityNotFound($"Order Entity with ID{orderId} not found");
+            }
+            return entity.ToDto();
         }
 
-        public Task<List<OrderDTO>> GetAll()
+        public async Task<List<OrderDTO>> GetByUser(long customerId)
         {
-            throw new NotImplementedException();
+            var entity=await context.Orders.Include(o=>o.Cart).ThenInclude(c=>c.CartItems).Where(context=>context.CustomerId==customerId).ToListAsync();
+
+            return entity.Select(x=>x.ToDto()).ToList();
         }
 
-        public Task<OrderDTO> GetById(Guid orderId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<OrderDTO>> GetByUser(Guid customerId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Reject(Guid orderId)
+        public Task Reject(long orderId)
         {
             throw new NotImplementedException();
         }
