@@ -1,9 +1,12 @@
 ﻿using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using IdentityRole = Domain.Entities.IdentityRole;
 
 namespace Domain.Context
 {
-    public sealed class OrdersDbContext : DbContext
+    public sealed class OrdersDbContext : IdentityDbContext<UserEntity,IdentityRole,long>
     {
         public OrdersDbContext(DbContextOptions<OrdersDbContext> options) : base(options)
         {

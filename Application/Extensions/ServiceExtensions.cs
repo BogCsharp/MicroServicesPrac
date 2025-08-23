@@ -1,11 +1,21 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using App.Abstrations;
+using App.Services;
+using Domain.Context;
+using Domain.Entities;
+using Domain.Models;
+using Domain.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using Domain.Context;
-using App.Services;
-using App.Abstrations;
+using System.Text;
+using IdentityRole = Domain.Entities.IdentityRole;
 
 namespace Web.Extensions
 {
@@ -69,5 +79,49 @@ namespace Web.Extensions
         {
             return builder;
         }
+        public static WebApplicationBuilder AddBearerAuthentication(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {///схема аутентификации
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                ///параметры для валидации токена
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Autentication:TokenPrivateKey"]!)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                };
+            });
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireRole(RoleConsts.Admin));
+                options.AddPolicy("Merchant", policy => policy.RequireRole(RoleConsts.Merchant));
+                options.AddPolicy("User", policy => policy.RequireRole(RoleConsts.User));
+            });
+            builder.Services.AddTransient<IAuthService, AuthService>();
+            builder.Services.AddDefaultIdentity<UserEntity>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+            .AddEntityFrameworkStores<OrdersDbContext>()
+            .AddUserManager<UserManager<UserEntity>>()
+            .AddUserStore<UserStore<UserEntity, IdentityRole, OrdersDbContext, long>>();
+
+            return builder;
+        }
+        public static WebApplicationBuilder AddOptions(this WebApplicationBuilder builder)
+        {
+            builder.Services.Configure<AuthOptions>(builder.Configuration.GetSection("Autentication:"));
+            return builder;
+        }
+
+
     }
 }

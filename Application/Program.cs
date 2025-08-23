@@ -9,6 +9,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder
+    .AddBearerAuthentication()
+    .AddOptions()
     .AddSwagger()
     .AddData()
     .AddApplicationServices()
@@ -19,6 +21,9 @@ var app = builder.Build();
 
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.MapControllers();
