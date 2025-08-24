@@ -1,5 +1,6 @@
 ﻿using App.Abstrations;
 using App.Models.Orders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -29,6 +30,7 @@ namespace Web.Controllers
             return Ok(result);
 
         }
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

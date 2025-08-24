@@ -50,7 +50,7 @@ namespace App.Services
 
         public async Task<UserResponse> Register(UserRegisterDto userRegisterDto)
         {
-            if (await userManager.FindByEmailAsync(userRegisterDto.Email)==null)
+            if (await userManager.FindByEmailAsync(userRegisterDto.Email)!=null)
             {
                 throw new DuplicateWaitObjectException($"Email:{userRegisterDto.Email} already exist");
             }
@@ -86,20 +86,34 @@ namespace App.Services
                 throw new Exception($"Errors:{string.Join(";",result.Errors.Select(x => $"{x.Code} {x.Description}"))}");
             }
 
-            throw new Exception();
+            throw new Exception($"Errors:{string.Join(";", createUserResult.Errors.Select(x => $"{x.Code} {x.Description}"))}");
         }
         public UserResponse GenerateToken(UserResponse userRegisterModel)
         {
             var handler = new JwtSecurityTokenHandler();
+            if (string.IsNullOrEmpty(_authOptions.TokenPrivateKey))
+            {
+                throw new InvalidOperationException("Token private key is not configured");
+            }
             var key=Encoding.ASCII.GetBytes(_authOptions.TokenPrivateKey);
             var credentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature);
+            var claims = new Dictionary<string, object>
+        {
+            {ClaimTypes.Name, userRegisterModel.Email!},
+            {ClaimTypes.NameIdentifier, userRegisterModel.Id.ToString()},
+            {JwtRegisteredClaimNames.Aud, "test"},
+            {JwtRegisteredClaimNames.Iss, "test"}
+        };
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = GenerateClaims(userRegisterModel),
                 Expires = DateTime.UtcNow.AddMinutes(_authOptions.ExpireIntervalMinutes),
-                SigningCredentials = credentials
+                SigningCredentials = credentials,
+                Claims = claims,
+                Audience = "test",
+                Issuer = "test"
             };
             var token = handler.CreateToken(tokenDescriptor);
             userRegisterModel.Token=handler.WriteToken(token);

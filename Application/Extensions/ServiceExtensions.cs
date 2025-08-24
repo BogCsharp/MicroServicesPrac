@@ -89,12 +89,21 @@ namespace Web.Extensions
             {///схема аутентификации
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
+                x.UseSecurityTokenValidators = true;
                 ///параметры для валидации токена
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Autentication:TokenPrivateKey"]!)),
+                    ValidIssuer = "test",
+                    ValidAudience = "test",
+                    // ValidateIssuer = true,
+                    // ValidateAudience = true,
+                    // ValidateLifetime = true,
+                    // ValidateIssuerSigningKey = true
                     ValidateIssuer = false,
                     ValidateAudience = false,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = false
                 };
             });
             builder.Services.AddAuthorization(options =>
@@ -118,7 +127,7 @@ namespace Web.Extensions
         }
         public static WebApplicationBuilder AddOptions(this WebApplicationBuilder builder)
         {
-            builder.Services.Configure<AuthOptions>(builder.Configuration.GetSection("Autentication:"));
+            builder.Services.Configure<AuthOptions>(builder.Configuration.GetSection("Autentication"));
             return builder;
         }
 

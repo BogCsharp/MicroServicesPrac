@@ -16,6 +16,38 @@
     ]
   },
   {
+    "ContainingType": "Web.Controllers.AccountsController",
+    "Method": "Login",
+    "RelativePath": "accounts/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userLoginDto",
+        "Type": "App.Models.Autentication.UserLoginDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Web.Controllers.AccountsController",
+    "Method": "Register",
+    "RelativePath": "accounts/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userRegisterDto",
+        "Type": "App.Models.Autentication.UserRegisterDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Web.Controllers.OrdersController",
     "Method": "Create",
     "RelativePath": "api/orders",
