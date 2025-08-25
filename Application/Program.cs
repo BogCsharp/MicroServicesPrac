@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpLogging;
 using Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpLogging((opt)=>
+{
+    opt.LoggingFields = HttpLoggingFields.RequestBody | HttpLoggingFields.RequestHeaders | HttpLoggingFields.Duration | HttpLoggingFields.RequestPath |
+                      HttpLoggingFields.RequestBody | HttpLoggingFields.RequestHeaders;
+});
 
 builder
     .AddBearerAuthentication()
@@ -14,11 +20,13 @@ builder
     .AddSwagger()
     .AddData()
     .AddApplicationServices()
-    .AddIntegrationServices();
+    .AddIntegrationServices()
+    .AddBackgroundServices();
 
 
 var app = builder.Build();
 
+app.UseHttpLogging();
 app.UseStaticFiles();
 app.UseRouting();
 

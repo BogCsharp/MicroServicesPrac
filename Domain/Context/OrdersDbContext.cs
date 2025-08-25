@@ -20,6 +20,7 @@ namespace Domain.Context
         public DbSet<CartEntity> Carts { get; set; } = null!;
         public DbSet<CartItemEntity> CartsItems { get; set; } = null!;
         public DbSet<OrderEntity> Orders { get; set; } = null!;
+        public DbSet<MerchantEntity> Merchants { get; set; } = null!;
     }
 
 

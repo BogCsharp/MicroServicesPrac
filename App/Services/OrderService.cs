@@ -12,6 +12,11 @@ namespace App.Services
     {
         public async Task<OrderDTO> Create(CreateOrderDTO order)
         {
+            var orderByOrderNumber=await context.Orders.FirstOrDefaultAsync(x=>x.OrderNumber==order.OrderNumber && x.MerchantId==order.MerchantId);
+            if (orderByOrderNumber != null)
+            {
+                throw new DuplicateEntityException($"Order with {order.OrderNumber} is exist for merchant {order.MerchantId}");
+            }
             if (order.Cart == null)
             {
                 throw new ArgumentNullException();

@@ -478,3 +478,4 @@ C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Application\obj\Debu
 C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Application\obj\Debug\net9.0\compressed\t0qo7o574p-dd6z7egasc.gz
 C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Application\obj\Debug\net9.0\compressed\b9lhb08218-5pze98is44.gz
 C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Application\obj\Debug\net9.0\compressed\yfc7ypekbg-mlv21k5csn.gz
+C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Application\bin\Debug\net9.0\RabbitMQ.Client.dll

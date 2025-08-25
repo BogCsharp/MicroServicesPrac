@@ -15,6 +15,7 @@ using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
+using Web.BackgroundServices;
 using IdentityRole = Domain.Entities.IdentityRole;
 
 namespace Web.Extensions
@@ -73,10 +74,16 @@ namespace Web.Extensions
         {
             builder.Services.AddScoped<ICartsService,CartService>();
             builder.Services.AddScoped<IOrdersService, OrderService>();
+            builder.Services.AddScoped<IMerchantsService, MerchantsService>();
             return builder;
         }
         public static WebApplicationBuilder AddIntegrationServices(this WebApplicationBuilder builder)
         {
+            return builder;
+        }
+        public static WebApplicationBuilder AddBackgroundServices(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddHostedService<CreateOrderConsumer>();
             return builder;
         }
         public static WebApplicationBuilder AddBearerAuthentication(this WebApplicationBuilder builder)

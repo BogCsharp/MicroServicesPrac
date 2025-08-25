@@ -251,6 +251,10 @@
           },
           "cart": {
             "$ref": "#/components/schemas/CartDTO"
+          },
+          "merchantId": {
+            "type": "integer",
+            "format": "int64"
           }
         },
         "additionalProperties": false
