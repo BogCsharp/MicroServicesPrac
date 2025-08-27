@@ -3,8 +3,10 @@ using App.Abstrations;
 using App.Models.Orders;
 using Domain.Options;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Writers;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -16,12 +18,11 @@ namespace Web.BackgroundServices
     {
         private readonly RabbitMQOptions _rabbitMQOptions;
         private readonly IChannel _channel;
-        private readonly IOrdersService _ordersService;
+        private readonly IServiceProvider _serviceProvider;
         public CreateOrderConsumer(IOptions<RabbitMQOptions> options,IServiceProvider serviceProvider)
         {
-            using var scope = serviceProvider.CreateScope();
-            _ordersService= scope.ServiceProvider.GetRequiredService<IOrdersService>();
             _rabbitMQOptions = options.Value;
+            _serviceProvider= serviceProvider;
             var factory = new ConnectionFactory
             {
                 HostName = _rabbitMQOptions.HostName,
@@ -43,9 +44,26 @@ namespace Web.BackgroundServices
             {
                 var body = eventA.Body;
                 var message = Encoding.UTF8.GetString(body.ToArray());
-                var createOrdersDto = JsonSerializer.Deserialize<CreateOrderDTO>(message);
+                try
+                {
+                    var createOrdersDto = JsonSerializer.Deserialize<CreateOrderDTO>(message, new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    })!;
+                    using var scope = _serviceProvider.CreateScope();
+                    var ordersService = scope.ServiceProvider.GetRequiredService<IOrdersService>();
 
-                await _ordersService.Create(createOrdersDto);
+                    await ordersService.Create(createOrdersDto);
+
+                    await _channel.BasicAckAsync(eventA.DeliveryTag, false, stoppingToken);
+
+                }
+                catch(Exception)
+                {
+                    await _channel.BasicAckAsync(eventA.DeliveryTag, false, stoppingToken);
+
+                }
+               
             };
             await _channel.BasicConsumeAsync(_rabbitMQOptions.CreateOrderQueueName,autoAck:false,consumer,cancellationToken:stoppingToken);
 

@@ -135,6 +135,7 @@ namespace Web.Extensions
         public static WebApplicationBuilder AddOptions(this WebApplicationBuilder builder)
         {
             builder.Services.Configure<AuthOptions>(builder.Configuration.GetSection("Autentication"));
+            builder.Services.Configure<RabbitMQOptions>(builder.Configuration.GetSection("RabbitMQ"));
             return builder;
         }
 

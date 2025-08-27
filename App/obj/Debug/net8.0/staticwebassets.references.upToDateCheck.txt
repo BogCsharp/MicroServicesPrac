@@ -50,3 +50,9 @@ C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Domain\obj\Debug\net
 C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Domain\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Domain\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Domain\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Domain\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Domain\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Domain\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Domain\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Domain\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Home_PC\Desktop\.Net Devops\MicroServiceTranaction\Domain\obj\Debug\net8.0\staticwebassets.build.json
