@@ -1,9 +1,12 @@
-﻿namespace Domain.Entities
+﻿using Domain.Models;
+
+namespace Domain.Entities
 {
     public class OrderEntity : BaseEntity
     {
         public string? Name { get; set; }
         public long OrderNumber { get; set; }
+        public OrderStatus  Status { get; set; }
 
         public CustomerEntity? Customer { get; set; }
         public long? CustomerId { get; set; }

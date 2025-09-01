@@ -50,7 +50,9 @@ namespace Web.Controllers
         [HttpPost("{orderId:long}/reject")]
         public async Task<IActionResult> Reject(long orderId)
         {
+            logger.LogInformation($"Method api/orders/reject Reject start.");
             await orders.Reject(orderId);
+
             return Ok();
         }
     }

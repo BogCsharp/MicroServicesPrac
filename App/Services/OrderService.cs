@@ -4,6 +4,7 @@ using App.Models.Orders;
 using Domain.Context;
 using Domain.Entities;
 using Domain.Exceptions;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.Services
@@ -27,7 +28,9 @@ namespace App.Services
                 OrderNumber = order.OrderNumber,
                 Name = order.Name,
                 CustomerId = order.CustomerId,
-                CartId = cart.Id
+                CartId = cart.Id,
+                Status = OrderStatus.Created,
+                MerchantId = order.MerchantId
             };
             var ordersSaveResult = await context.Orders.AddAsync(entity);
             await context.SaveChangesAsync();
@@ -63,9 +66,15 @@ namespace App.Services
             return entity.Select(x=>x.ToDto()).ToList();
         }
 
-        public Task Reject(long orderId)
+        public async Task Reject(long orderId)
         {
-            throw new NotImplementedException();
+            var order = await context.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
+            if(order == null)
+            {
+                throw new EntityNotFound($"Order with Id:{orderId} not found");
+            }
+            order.Status=OrderStatus.Reject;
+            await context.SaveChangesAsync();
         }
     }
 }
